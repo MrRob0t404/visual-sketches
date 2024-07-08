@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "sketch-01.js",
   "scripts": {
+    "start": "canvas-sketch sketch-01.js --open --hot --port 9966",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
