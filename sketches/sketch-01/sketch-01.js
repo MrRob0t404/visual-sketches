@@ -1,7 +1,7 @@
 import canvasSketch from "canvas-sketch";
 
 const settings = {
-  dimensions: [600, 600],
+  dimensions: [1080, 1080],
 };
 
 const sketch = () => {
@@ -9,10 +9,15 @@ const sketch = () => {
     context.fillStyle = "white";
     context.fillRect(0, 0, width, height);
 
-    let w = 60;
-    let h = 60;
+    const cx = width * 0.15;
+    const cy = height * 0.15;
+
+    let w = 100;
+    let h = 100;
     let gap = 20;
     let x, y;
+    
+    context.translate(cx, cy);
 
     for (let i = 0; i < 5; i++) {
       for (let j = 0; j < 5; j++) {
@@ -21,6 +26,7 @@ const sketch = () => {
 
         context.beginPath();
         context.rect(x, y, w, h);
+
         if (Math.random() > 0.5) {
           context.rect(x + 8, y + 8, w - 16, h - 16);
         }
