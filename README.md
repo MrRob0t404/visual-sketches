@@ -1,6 +1,6 @@
 # visual-sketches
 
-Inspired by my time working alongside Edgardo, who ignited my love for coding again and inspired me to dive into the creative coding aspect of zero's and one's and by extension, Zach Lieberman.
+Inspired by my time working alongside [Edgardo](https://github.com/eaviles), who ignited my love for coding again and inspired me to dive into the creative coding aspect of zero's and one's and by extension, Zach Lieberman.
 
 Using [mattdesi's](https://github.com/mattdesl) [canvas-sketch](https://github.com/mattdesl/canvas-sketch) framework along side p5 library.
 
