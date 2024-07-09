@@ -1,1 +1,1 @@
-![image](https://github.com/MrRob0t404/visual-sketches/assets/15705947/e367315f-02df-47ec-8fad-9bcabddd72ca)
+![image](https://github.com/MrRob0t404/visual-sketches/assets/15705947/b94d8706-e41b-4fd6-894b-56b4ba6c6958)
