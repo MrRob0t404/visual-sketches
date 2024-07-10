@@ -11,4 +11,4 @@ Using [mattdesi's](https://github.com/mattdesl) [canvas-sketch](https://github.c
 ![image](https://github.com/MrRob0t404/visual-sketches/assets/15705947/8aeea2a2-84b4-43eb-be09-2353f50dbe3a)
 
 ## Sketch-03 07102024-1152
-![Lines](./sketch-03/output/2024.07.10-11.45.06.gif)
+![Lines](./sketches/sketch-03/output/2024.07.10-11.45.06.gif)
