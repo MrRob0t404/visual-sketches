@@ -19,7 +19,7 @@ class AudioManager {
       peakVolume: 0,
       averageVolume: 0,
       sampleCount: 0,
-      volumeSum: 0
+      volumeSum: 0,
     };
   }
 
@@ -30,9 +30,9 @@ class AudioManager {
       // Initialize audio context
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new AudioContext();
-      console.log('Audio Context created:', {
+      console.log("Audio Context created:", {
         sampleRate: this.audioContext.sampleRate,
-        state: this.audioContext.state
+        state: this.audioContext.state,
       });
 
       // Configure analyzer node
@@ -41,16 +41,16 @@ class AudioManager {
       this.analyser.smoothingTimeConstant = 0.8;
       this.analyser.minDecibels = -85;
       this.analyser.maxDecibels = -10;
-      console.log('Analyzer configured:', {
+      console.log("Analyzer configured:", {
         fftSize: this.analyser.fftSize,
         frequencyBinCount: this.analyser.frequencyBinCount,
-        smoothingTimeConstant: this.analyser.smoothingTimeConstant
+        smoothingTimeConstant: this.analyser.smoothingTimeConstant,
       });
 
       this.initialized = true;
-      console.log('Audio Manager initialized successfully');
+      console.log("Audio Manager initialized successfully");
     } catch (error) {
-      console.error('Failed to initialize AudioManager:', error);
+      console.error("Failed to initialize AudioManager:", error);
       throw error;
     }
   }
@@ -67,30 +67,30 @@ class AudioManager {
       // Request microphone access with more specific constraints
       this.stream = await navigator.mediaDevices.getUserMedia({
         audio: {
-          echoCancellation: false,  // Disable echo cancellation
-          noiseSuppression: false,  // Disable noise suppression
-          autoGainControl: false,   // Disable auto gain
-          sampleRate: 44100,        // Set specific sample rate
-          channelCount: 1,          // Use mono audio
-          latency: 0,               // Minimize latency
-        }
+          echoCancellation: false, // Disable echo cancellation
+          noiseSuppression: false, // Disable noise suppression
+          autoGainControl: false, // Disable auto gain
+          sampleRate: 44100, // Set specific sample rate
+          channelCount: 1, // Use mono audio
+          latency: 0, // Minimize latency
+        },
       });
 
       // Log stream details
       const audioTrack = this.stream.getAudioTracks()[0];
-      console.log('Microphone stream obtained:', {
+      console.log("Microphone stream obtained:", {
         label: audioTrack.label,
         enabled: audioTrack.enabled,
         muted: audioTrack.muted,
         readyState: audioTrack.readyState,
-        settings: audioTrack.getSettings()
+        settings: audioTrack.getSettings(),
       });
 
       // Create and connect the audio nodes
       this.microphone = this.audioContext.createMediaStreamSource(this.stream);
       this.microphone.connect(this.analyser);
       this.isActive = true;
-      
+
       // Reset metrics
       this.metrics = {
         lastUpdate: Date.now(),
@@ -98,12 +98,12 @@ class AudioManager {
         peakVolume: 0,
         averageVolume: 0,
         sampleCount: 0,
-        volumeSum: 0
+        volumeSum: 0,
       };
 
-      console.log('Microphone started successfully');
+      console.log("Microphone started successfully");
     } catch (error) {
-      console.error('Failed to start microphone:', error);
+      console.error("Failed to start microphone:", error);
       // Try to clean up any partial initialization
       await this.stopMicrophone();
       throw error;
@@ -116,7 +116,7 @@ class AudioManager {
     try {
       // Stop all tracks in the stream
       if (this.stream) {
-        this.stream.getTracks().forEach(track => track.stop());
+        this.stream.getTracks().forEach((track) => track.stop());
         this.stream = null;
       }
 
@@ -127,15 +127,16 @@ class AudioManager {
       }
 
       this.isActive = false;
-      console.log('Microphone stopped successfully');
+      console.log("Microphone stopped successfully");
     } catch (error) {
-      console.error('Error stopping microphone:', error);
+      console.error("Error stopping microphone:", error);
       throw error;
     }
   }
 
   getAudioData() {
-    if (!this.isActive || !this.analyser) return { volume: 0, frequencyData: null };
+    if (!this.isActive || !this.analyser)
+      return { volume: 0, frequencyData: null };
 
     const frequencyData = new Uint8Array(this.analyser.frequencyBinCount);
     this.analyser.getByteFrequencyData(frequencyData);
@@ -145,8 +146,9 @@ class AudioManager {
     const rawVolume = sum / frequencyData.length / 255; // Normalize to 0-1
 
     // Apply smoothing
-    this.prevVolume = this.prevVolume * this.volumeSmoothing + 
-                     rawVolume * (1 - this.volumeSmoothing);
+    this.prevVolume =
+      this.prevVolume * this.volumeSmoothing +
+      rawVolume * (1 - this.volumeSmoothing);
 
     // Update metrics
     this.updateMetrics(this.prevVolume);
@@ -154,13 +156,13 @@ class AudioManager {
     return {
       volume: this.prevVolume,
       frequencyData: frequencyData,
-      metrics: this.metrics
+      metrics: this.metrics,
     };
   }
 
   updateMetrics(volume) {
     const now = Date.now();
-    
+
     // Update running metrics
     this.metrics.peakVolume = Math.max(this.metrics.peakVolume, volume);
     this.metrics.volumeSum += volume;
@@ -168,16 +170,17 @@ class AudioManager {
 
     // Log metrics every second
     if (now - this.metrics.lastUpdate >= this.metrics.updateInterval) {
-      this.metrics.averageVolume = this.metrics.volumeSum / this.metrics.sampleCount;
-      
-      console.log('Audio Metrics:', {
+      this.metrics.averageVolume =
+        this.metrics.volumeSum / this.metrics.sampleCount;
+
+      console.log("Audio Metrics:", {
         timestamp: new Date().toISOString(),
         currentVolume: volume.toFixed(3),
         peakVolume: this.metrics.peakVolume.toFixed(3),
         averageVolume: this.metrics.averageVolume.toFixed(3),
         samples: this.metrics.sampleCount,
         audioContextState: this.audioContext?.state,
-        isActive: this.isActive
+        isActive: this.isActive,
       });
 
       // Reset metrics
@@ -214,10 +217,10 @@ const params = {
   frame: 0,
   lineCap: "butt",
   // Audio visualization parameters
-  volumeScale: 3.0,     // Increased from 1.5 to 3.0 for more dramatic effect
-  volumeRotation: 1.0,  // Increased from 0.5 to 1.0 for more rotation
-  showDebug: true,      // Toggle debug visualization
-  debugBarHeight: 20,   // Height of debug bar
+  volumeScale: 3.0, // Increased from 1.5 to 3.0 for more dramatic effect
+  volumeRotation: 1.0, // Increased from 0.5 to 1.0 for more rotation
+  showDebug: true, // Toggle debug visualization
+  debugBarHeight: 20, // Height of debug bar
 };
 
 // Create a single instance of AudioManager
@@ -236,11 +239,11 @@ const sketch = () => {
     if (params.showDebug) {
       context.fillStyle = "rgba(0, 0, 0, 0.1)";
       context.fillRect(0, 0, width, params.debugBarHeight);
-      
+
       // Draw volume bar
       context.fillStyle = "red";
       context.fillRect(0, 0, width * volume, params.debugBarHeight);
-      
+
       // Draw volume text
       context.fillStyle = "black";
       context.font = "12px Arial";
@@ -256,7 +259,8 @@ const sketch = () => {
     const cellw = gridw / cols;
     const cellh = gridh / rows;
     const margx = (width - gridw) * 0.5;
-    const margy = (height - gridh) * 0.5 + (params.showDebug ? params.debugBarHeight : 0); // Adjust for debug bar
+    const margy =
+      (height - gridh) * 0.5 + (params.showDebug ? params.debugBarHeight : 0); // Adjust for debug bar
 
     for (let i = 0; i < numCells; i++) {
       const col = i % cols;
@@ -268,14 +272,17 @@ const sketch = () => {
       const h = 0.8 * cellh;
 
       const f = params.animate ? frame : params.frame;
-      
+
       // Incorporate volume into noise calculation
       const n = random.noise2D(x + f * 10, y, params.freq);
-      
+
       // Add volume influence to angle and scale with more dramatic effect
-      const angle = n * Math.PI * params.amp + (volume * Math.PI * params.volumeRotation);
-      const volumeInfluence = 1 + (volume * params.volumeScale);
-      const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax) * volumeInfluence;
+      const angle =
+        n * Math.PI * params.amp + volume * Math.PI * params.volumeRotation;
+      const volumeInfluence = 1 + volume * params.volumeScale;
+      const scale =
+        math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax) *
+        volumeInfluence;
 
       // Add color based on volume
       const hue = (volume * 360) % 360;
@@ -327,7 +334,7 @@ const createPane = () => {
     try {
       await audioManager.startMicrophone();
     } catch (error) {
-      console.error('Failed to start microphone:', error);
+      console.error("Failed to start microphone:", error);
     }
   });
 
@@ -337,7 +344,7 @@ const createPane = () => {
 };
 
 // Cleanup on page unload
-window.addEventListener('unload', () => {
+window.addEventListener("unload", () => {
   audioManager.cleanup();
 });
 
