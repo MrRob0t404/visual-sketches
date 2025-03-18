@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "sketch-04.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx canvas-sketch sketch-04.js --https --hot"
   },
   "keywords": [],
   "author": "",
